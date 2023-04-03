@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
-
 import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+
+const bcrypt = require('bcrypt');
 
 @Entity('user')
 export class UserEntity {
@@ -10,21 +10,17 @@ export class UserEntity {
     nullable: false,
     unique: true,
   })
-  username: string;
+  public username: string;
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  password: string;
+  public password: string;
   @Column({
     type: 'varchar',
     nullable: false,
   })
-  email: string;
-  @Column({
-    type: 'varchar',
-    nullable: false,
-  })
+  public email: string;
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

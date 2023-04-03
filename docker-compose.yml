@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: docker/node/Dockerfile
-#    command: npm run start:debug
+    command: npm run start:debug
     env_file:
       - docker.env
     volumes:
