@@ -6,9 +6,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateUserDto } from '../../user/interface/user.create.dto';
-import {LoginStatus, RegistrationStatus} from '../../../shared/mapper';
-import { LoginUserDto } from '../../user/interface/user.login.dto';
+import { CreateUserDto } from '@user/interface/user.create.dto';
+import { LoginStatus, RegistrationStatus } from '@auth/interface/auth.interface';
+import { LoginUserDto } from '@user/interface/user.login.dto';
 
 @Controller('auth')
 export class AuthController {

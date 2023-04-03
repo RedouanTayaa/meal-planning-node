@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import {DataSourceOptions} from "typeorm";
+import { DataSourceOptions } from 'typeorm';
 
 require('dotenv').config();
 
