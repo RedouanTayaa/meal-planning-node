@@ -12,6 +12,15 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiQuery,
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
+} from '@nestjs/swagger';
 import { MealService } from '@meal/service/meal.service';
 import { AuthGuard } from '@auth/service/auth.guard';
 import { CreateMealDto } from '@meal/interface/meal.create.dto';
@@ -20,11 +29,19 @@ import { betweenDateRequest } from '@meal/interface/meal.interface';
 import { UpdateMealDto } from '@meal/interface/meal.update.dto';
 
 @Controller('meal')
+@ApiTags('Meal')
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 export class MealController {
   constructor(private readonly mealService: MealService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create meal' })
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: MealDto,
+  })
+  @ApiBadRequestResponse({ description: 'Error to create record' })
   public async createMeal(
     @Request() req,
     @Body() createMealDto: CreateMealDto,
@@ -42,6 +59,19 @@ export class MealController {
   }
 
   @Get()
+  @ApiQuery({
+    name: 'begin',
+    required: true,
+    type: String,
+    description: 'Begin date to get (YYYY-MM-DD)',
+  })
+  @ApiQuery({
+    name: 'end',
+    required: true,
+    type: String,
+    description: 'End date to get (YYYY-MM-DD)',
+  })
+  @ApiOperation({ summary: 'Get meals between date' })
   public async getMealBetweenDate(
     @Request() req,
     @Query() query: betweenDateRequest,
@@ -54,6 +84,12 @@ export class MealController {
   }
 
   @Put()
+  @ApiOperation({ summary: 'Update meal' })
+  @ApiResponse({
+    description: 'The record has been successfully updated.',
+    type: MealDto,
+  })
+  @ApiBadRequestResponse({ description: 'Error to update record' })
   public async updateMeal(
     @Request() req,
     @Body() updateMealDto: UpdateMealDto,
@@ -71,6 +107,12 @@ export class MealController {
   }
 
   @Get('suggestion')
+  @ApiQuery({
+    name: 'search',
+    required: true,
+    type: String,
+  })
+  @ApiOperation({ summary: 'Get menu suggestion from previous menus' })
   public async getMenuSuggestion(
     @Request() req,
     @Query() query: { search: string },
@@ -79,6 +121,8 @@ export class MealController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove meal' })
+  @ApiBadRequestResponse({ description: 'Error to remove record' })
   public async deleteMeal(@Request() req, @Param('id') id: string) {
     try {
       await this.mealService.remove(req.user, id);

@@ -2,7 +2,7 @@ export enum MealType {
   BREAKFAST = 'BREAKFAST',
   LUNCH = 'LUNCH',
   SNACK = 'SNACK',
-  Dinner = 'Dinner',
+  DINNER = 'DINNER',
 }
 
 export interface betweenDateRequest {

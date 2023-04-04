@@ -5,7 +5,7 @@ export class CreateMealTable1680551703297 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TYPE "public"."meal_type_enum" AS ENUM('BREAKFAST', 'LUNCH', 'SNACK', 'Dinner')`,
+      `CREATE TYPE "public"."meal_type_enum" AS ENUM('BREAKFAST', 'LUNCH', 'SNACK', 'DINNER')`,
     );
     await queryRunner.query(
       `CREATE TABLE "meal" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "date" date NOT NULL, "type" "public"."meal_type_enum" NOT NULL, "menu" text NOT NULL, "ownerId" uuid NOT NULL, CONSTRAINT "PK_ada510a5aba19e6bb500f8f7817" PRIMARY KEY ("id"))`,

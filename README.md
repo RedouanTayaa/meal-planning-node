@@ -11,12 +11,14 @@ Meal planning based on [Nest](https://github.com/nestjs/nest) framework TypeScri
 
 ```bash
 $ docker-compose up -d --build
+$ npm run migration:up
 ```
 
 ## Installation without Docker
 
 ```bash
 $ npm install
+$ npm run migration:up
 ```
 
 ## Running the app without Docker
