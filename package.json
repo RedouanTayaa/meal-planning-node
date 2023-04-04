@@ -76,6 +76,14 @@
       "ts"
     ],
     "rootDir": "src",
+    "moduleNameMapper": {
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@config/(.*)$": "<rootDir>/config/$1",
+      "^@user/(.*)$": "<rootDir>/modules/user/$1",
+      "^@meal/(.*)$": "<rootDir>/modules/meal/$1",
+      "^@auth/(.*)$": "<rootDir>/modules/auth/$1"
+    },
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

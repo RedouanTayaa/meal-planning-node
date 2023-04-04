@@ -15,7 +15,13 @@ export const toMealDto = (data: MealEntity): MealDto => {
 };
 
 export const toMealWithOwnerDto = (data: MealEntity): MealDto => {
-  const { id, date, type, menu, owner: {id: ownerId} } = data;
+  const {
+    id,
+    date,
+    type,
+    menu,
+    owner: { id: ownerId },
+  } = data;
   return { id, date, type, menu, ownerId };
 };
 
