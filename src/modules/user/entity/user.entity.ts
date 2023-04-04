@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  OneToMany,
+} from 'typeorm';
+import { MealEntity } from '../../../modules/meal/entity/meal.entity';
 
 const bcrypt = require('bcrypt');
 
@@ -25,4 +32,7 @@ export class UserEntity {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  @OneToMany(() => MealEntity, (meal) => meal.owner)
+  public meals: MealEntity[];
 }
