@@ -8,7 +8,7 @@ services:
     volumes:
       - /data/postgres:/data/postgres
     env_file:
-      - .env
+      - api/.env
 
   pgadmin:
     image: dpage/pgadmin4:6.18
@@ -19,22 +19,37 @@ services:
     volumes:
       - /data/pgadmin:/root/.pgadmin
     env_file:
-      - .env
+      - api/.env
 
   nestjs-api:
     image: nestjs-api
     build:
-      context: .
-      dockerfile: docker/node/Dockerfile
+      context: ./api
+      dockerfile: ../docker/node/Dockerfile
     command: npm run start:debug
     env_file:
-      - .env
+      - api/.env
     volumes:
-      - ./:/usr/src/app
+      - ./api:/usr/src/app
     ports:
       - "3000:3000"
     depends_on:
       - postgres
+    networks:
+      - postgres
+
+  ionic-front:
+    image: ionic-front
+    build:
+      context: ./front
+      dockerfile: ../docker/front/Dockerfile
+    command: npm run start
+    env_file:
+      - front/.env
+    volumes:
+      - ./front:/usr/src/app
+    ports:
+      - "4200:4200"
     networks:
       - postgres
 
