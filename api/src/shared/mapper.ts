@@ -5,8 +5,8 @@ import { MealEntity } from '@meal/entity/meal.entity';
 import { MealDto } from '@meal/interface/meal.dto';
 
 export const toUserDto = (data: UserEntity): UserDto => {
-  const { id, username, email } = data;
-  return { id, username, email };
+  const { id, username, email, lastUpdate, refreshToken } = data;
+  return { id, username, email, lastUpdate, refreshToken };
 };
 
 export const toMealDto = (data: MealEntity): MealDto => {

@@ -9,5 +9,13 @@ export interface JwtPayload {
 
 export interface LoginStatus {
   username: string;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
+
+export type JwtPayloadWithRt = JwtPayload & { refreshToken: string };
+
+export type Tokens = {
+  accessToken: string;
+  refreshToken: string;
+};

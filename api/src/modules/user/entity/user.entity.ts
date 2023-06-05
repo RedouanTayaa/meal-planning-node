@@ -35,4 +35,16 @@ export class UserEntity {
 
   @OneToMany(() => MealEntity, (meal) => meal.owner)
   public meals: MealEntity[];
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  public lastUpdate: Date;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  public refreshToken: string;
 }

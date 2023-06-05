@@ -14,4 +14,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  @ApiProperty()
+  lastUpdate: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  refreshToken: string;
 }

@@ -73,6 +73,31 @@ export class UserService {
     await this.usersRepository.delete(id);
   }
 
+  async setCurrentRefreshToken(refreshToken: string, userId: string) {
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+
+    return await this.usersRepository.update(userId, {
+      refreshToken: currentHashedRefreshToken,
+    });
+  }
+
+  async removeRefreshToken(username: string) {
+    const user = await this.findByPayload({ username });
+    if (!user) {
+      throw new HttpException(
+        'User with this username does not exist',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return this.usersRepository.update(
+      { username },
+      {
+        refreshToken: null,
+      },
+    );
+  }
+
   async comparePasswords(actualPassword, checkPassword): Promise<boolean> {
     return await bcrypt.compare(checkPassword, actualPassword);
   }
