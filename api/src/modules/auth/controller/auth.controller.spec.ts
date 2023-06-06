@@ -4,10 +4,12 @@ import { Test } from '@nestjs/testing';
 import {
   LoginStatus,
   RegistrationStatus,
+  Tokens,
 } from '@auth/interface/auth.interface';
 import { CreateUserDto } from '@user/interface/user.create.dto';
 import { LoginUserDto } from '@user/interface/user.login.dto';
-import { HttpException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from '@user/service/user.service';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -23,13 +25,32 @@ describe('AuthController', () => {
         };
         const loginResult: LoginStatus = {
           username: 'test',
-          token: '123456',
+          accessToken: '123456',
+          refreshToken: '789012',
         };
-        if (token === AuthService) {
-          return {
-            register: jest.fn().mockResolvedValue(registerResult),
-            login: jest.fn().mockResolvedValue(loginResult),
-          };
+
+        const tokens: Tokens = {
+          accessToken: '123456',
+          refreshToken: '789012',
+        };
+        switch (token) {
+          case AuthService:
+            return {
+              register: jest.fn().mockResolvedValue(registerResult),
+              login: jest.fn().mockResolvedValue(loginResult),
+              createAccessTokenFromRefreshToken: jest
+                .fn()
+                .mockResolvedValue(tokens),
+              removeRefreshToken: jest.fn().mockReturnValue(null),
+            };
+          case JwtService:
+            return {
+              verifyAsync: jest.fn().mockResolvedValue({ username: 'test' }),
+            };
+          case UserService:
+            return {
+              findByPayload: jest.fn().mockResolvedValue({ username: 'test' }),
+            };
         }
       })
       .compile();
@@ -43,6 +64,8 @@ describe('AuthController', () => {
         username: 'test',
         password: '12345',
         email: 'test@meal.com',
+        lastUpdate: null,
+        refreshToken: null,
       };
 
       const expectResult: RegistrationStatus = {
@@ -66,13 +89,25 @@ describe('AuthController', () => {
           };
           const loginResult: LoginStatus = {
             username: 'test',
-            token: '123456',
+            accessToken: '123456',
+            refreshToken: '789012',
           };
-          if (token === AuthService) {
-            return {
-              register: jest.fn().mockResolvedValue(registerResult),
-              login: jest.fn().mockResolvedValue(loginResult),
-            };
+          switch (token) {
+            case AuthService:
+              return {
+                register: jest.fn().mockResolvedValue(registerResult),
+                login: jest.fn().mockResolvedValue(loginResult),
+              };
+            case JwtService:
+              return {
+                verifyAsync: jest.fn().mockResolvedValue({ username: 'test' }),
+              };
+            case UserService:
+              return {
+                findByPayload: jest
+                  .fn()
+                  .mockResolvedValue({ username: 'test' }),
+              };
           }
         })
         .compile();
@@ -82,6 +117,8 @@ describe('AuthController', () => {
         username: 'test',
         password: '12345',
         email: 'test@meal.com',
+        lastUpdate: null,
+        refreshToken: null,
       };
 
       await authControllerError.register(createUserDto).catch((reason) => {
@@ -97,10 +134,29 @@ describe('AuthController', () => {
 
       const expectResult: LoginStatus = {
         username: 'test',
-        token: '123456',
+        accessToken: '123456',
+        refreshToken: '789012',
       };
 
       expect(await authController.login(loginUserDto)).toStrictEqual(
+        expectResult,
+      );
+    });
+
+    it('should get new token', async () => {
+      const expectResult: Tokens = {
+        accessToken: '123456',
+        refreshToken: '789012',
+      };
+
+      const req = {
+        user: {
+          username: 'test',
+          refreshToken: '789012',
+        },
+      };
+
+      expect(await authController.refreshTokens(req)).toStrictEqual(
         expectResult,
       );
     });
